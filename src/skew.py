@@ -59,15 +59,18 @@ class SkewAnalysis():
                              annot=True,
                              cbar_kws={"orientation": "horizontal"})
         
-    def feature_selection(self, df, ratio=0.5):
-        continuous_col = [i for i in df.columns if df.loc[:,i].dtype!='object']
-        categorical_col = [i for i in df.columns if df.loc[:,i].dtype=='object']
-
-        correlation = df[continuous_col].corr()
-
-        corr_col = list(correlation[self.target_col][correlation[self.target_col] > ratio].index)
-        
-        return df.loc[:, corr_col + categorical_col]
+    def feature_selection(self, df, col=None, ratio=0.5):
+        if col == None:
+            continuous_col = [i for i in df.columns if df.loc[:,i].dtype!='object']
+            categorical_col = [i for i in df.columns if df.loc[:,i].dtype=='object']
+            correlation = df[continuous_col].corr()
+            corr_col = list(correlation[self.target_col][correlation[self.target_col] > ratio].index)
+            return df.loc[:, corr_col + categorical_col]
+        else:
+            correlation = df[col].corr()
+            corr_col = list(correlation[self.target_col][correlation[self.target_col] > ratio].index)
+            other_col = [i for i in df.columns if i not in col]
+            return df.loc[:, corr_col + other_col]
 
     def unskew(self, df):
         def process_data(data):
