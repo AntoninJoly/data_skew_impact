@@ -1,5 +1,7 @@
-
+notebook/.ipynb_checkpoints
 data/how-much-did-it-rain-ii/train.csv
 data/how-much-did-it-rain-ii/test.csv
 data/nyc-taxi-trip-duration/train.csv
 data/new-york-city-taxi-fare-prediction/train.csv
+notebook/.ipynb_checkpoints/house_price-checkpoint.ipynb
+src/__pycache__/skew.cpython-37.pyc

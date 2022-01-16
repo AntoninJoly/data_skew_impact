@@ -13,14 +13,10 @@ class SkewAnalysis():
         self.col = 'default' # continuous = int/float; categorical = object
         self.method_col = {'continuous': 'mean', # Replace Nan by mean value
                            'categorical':'most'} # Replace Nan value by most occuring
-        self.df = None
-        self.corr = None
-        self.df_unskew = None
         self.skewness = None
 
         self.target_col = None
-        self.continuous_corr_cols = None
-
+        
         self.norm = None
         self.encoder = None
 
@@ -48,12 +44,11 @@ class SkewAnalysis():
                 df[c].fillna(df[c].mode()[0])
             else: # Replace Nan by mean
                 df[c].fillna((df[c].mean()), inplace=True)
-        self.df = df
-        self.df_unskew = df
+        
         return nan.loc[:,drop], df
 
-    def visualize_correlations(self):
-        corr = self.df.loc[:,self.corr_col]
+    def visualize_correlations(self, df):
+        corr = df.loc[:,self.corr_col]
         # Visualization
         sns.set(font_scale=1.5)
         plt.figure(figsize=(20,20))
@@ -64,13 +59,17 @@ class SkewAnalysis():
                              annot=True,
                              cbar_kws={"orientation": "horizontal"})
         
-    def correlate_target(self, ratio=0.5):
-        correlation = self.df.corr()
-        self.corr_col = list(correlation[self.target_col][correlation[self.target_col] > ratio].index)
-        self.corr = self.df.loc[:,self.corr_col]
-        self.continuous_corr_cols = [i for i in self.corr.columns if self.corr.loc[:,i].dtype!='object']
+    def feature_selection(self, df, ratio=0.5):
+        continuous_col = [i for i in df.columns if df.loc[:,i].dtype!='object']
+        categorical_col = [i for i in df.columns if df.loc[:,i].dtype=='object']
 
-    def unskew_correlated_variables(self):
+        correlation = df[continuous_col].corr()
+
+        corr_col = list(correlation[self.target_col][correlation[self.target_col] > ratio].index)
+        
+        return df.loc[:, corr_col + categorical_col]
+
+    def unskew(self, df):
         def process_data(data):
             for i in data.columns:
                 method = self.transform[i]
@@ -80,14 +79,15 @@ class SkewAnalysis():
                     data[i] = np.sqrt(data[i])
             return data
 
-        self.correlate_target()
-        df = self.df[self.continuous_corr_cols]
+        continuous_col = [i for i in df.columns if df.loc[:,i].dtype!='object']
+        df_continuous = df.loc[:,continuous_col]
+
         # Apply reversible transformation to dataframe
-        df_log = pd.DataFrame(np.log1p(df.copy()), columns= self.continuous_corr_cols)
-        df_square = pd.DataFrame(np.sqrt(df.copy()), columns= self.continuous_corr_cols)
+        df_log = pd.DataFrame(np.log1p(df_continuous.copy()), columns= df_continuous.columns)
+        df_square = pd.DataFrame(np.sqrt(df_continuous.copy()), columns= df_continuous.columns)
 
         # Compute skewness of each dataframe
-        skewed = df.skew()
+        skewed = df_continuous.skew()
         skewed_log = df_log.skew()
         skewed_square = df_square.skew()
 
@@ -95,53 +95,48 @@ class SkewAnalysis():
         self.skewness.columns = ['Raw','Log','Root']
         self.transform = self.skewness.abs().idxmin(axis=1).to_dict()
                 
-        unskew = process_data(df)
-
+        unskew = process_data(df_continuous)
         # Replace unskewed column in original dataframe
         for idx, c in enumerate(unskew.columns):
-            self.df_unskew[c] = unskew[c]
+            df[c] = unskew[c]
         skew_dict = {'original':skewed.to_dict(),
                      'unskewed':unskew.skew().to_dict(),
                      'transformation':self.transform}
-        return self.df_unskew, skew_dict
 
-    def visualize_skew(self, corr):
+        return df, skew_dict
+
+    def visualize_skew(self, drop_non_corr=True):
         ax = self.skewness.abs().plot.bar(rot=90,figsize=(10,7))
 
-    def normalize_and_encode(self, keep_corr):
-        continuous_col = [i for i in self.df.columns if self.df.loc[:,i].dtype!='object']
-        categorical_col = [i for i in self.df.columns if self.df.loc[:,i].dtype=='object']
+    def normalize_and_encode(self, df):
+        continuous_col = [i for i in df.columns if df.loc[:,i].dtype!='object']
+        categorical_col = [i for i in df.columns if df.loc[:,i].dtype=='object']
 
-        df_continuous = self.normalize_continuous(continuous_col)
-        df_categorical = self.encode_categorical(categorical_col)
+        df_continuous = self.normalize_continuous(df.loc[:,continuous_col])
+        df_categorical = self.encode_categorical(df.loc[:,categorical_col])
 
-        self.df = pd.concat((df_continuous, df_categorical),axis=1)
+        df = pd.concat((df_continuous, df_categorical), axis=1)
 
-        if keep_corr:
-            self.correlate_target()
-            self.df = self.corr
+        return df
 
-        return self.df, df_continuous, df_categorical
-
-    def normalize_continuous(self, col, method='mean'):
+    def normalize_continuous(self, df, method='mean'):
         if method == 'mean':# Mean normalization
-            mean = self.df_unskew.loc[:,col].mean()
-            std = self.df_unskew.std()
+            mean = df.mean()
+            std = df.std()
             self.norm = {'mean':mean,'std':std}
-            self.df_unskew.loc[:,col] = (self.df_unskew.loc[:,col]-mean)/std
+            df = (df-mean)/std
         elif method == 'minmax':# Min-max normalization
-            min_ = self.df_unskew.loc[:,col].min()
-            max_ = self.df_unskew.loc[:,col].max()
+            min_ = df.loc[:,col].min()
+            max_ = df.loc[:,col].max()
             self.norm = {'min':min_,'max':max_}
-            self.df_unskew.loc[:,col] = (self.df_unskew.loc[:,col]-min_)/(max_ - min_)
-        return self.df_unskew.loc[:,col]
+            df = (df-min_)/(max_ - min_)
+        return df
 
-    def encode_categorical(self, col, method='onehot'):
-        
+    def encode_categorical(self, df, method='onehot'):
         self.encoder = OneHotEncoder(dtype=np.int, sparse=True)
-        df_categorical = pd.DataFrame(self.encoder.fit_transform(self.df.loc[:,col]).toarray(),
+        df_categorical = pd.DataFrame(self.encoder.fit_transform(df).toarray(),
                                       columns = [i for i in self.encoder.get_feature_names()],
-                                      index = self.df.index)
+                                      index = df.index)
         return df_categorical
 
     def encode(self):
