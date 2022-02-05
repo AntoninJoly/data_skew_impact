@@ -1,0 +1,55 @@
+raw data, nan processing, normalization/encoding, training on 80/10/10
+raw data, nan processing, standardization/encoding, training on 80/10/10
+raw data, nan processing, normalization/encoding, feature selection on continuous columns, training on 80/10/10
+raw data, nan processing, standardization/encoding, feature selection on continuous columns, training on 80/10/10
+raw data, nan processing, normalization/encoding, feature selection on all columns, training on 80/10/10
+raw data, nan processing, standardization/encoding, feature selection on all columns, training on 80/10/10
+raw data, nan processing, feature selection on continuous columns, standardization/encoding, training on 80/10/10
+raw data, nan processing, feature selection on continuous columns, normalization/encoding, training on 80/10/10
+
+raw data, nan processing, normalization/encoding, training on 5 folds 80/10/10
+raw data, nan processing, standardization/encoding, training on 5 folds 80/10/10
+raw data, nan processing, normalization/encoding, feature selection on continuous columns, training on 5 folds 80/10/10
+raw data, nan processing, standardization/encoding, feature selection on continuous columns, training on 5 folds 80/10/10
+raw data, nan processing, normalization/encoding, feature selection on all columns, training on 5 folds 80/10/10
+raw data, nan processing, standardization/encoding, feature selection on all columns, training on 5 folds 80/10/10
+raw data, nan processing, feature selection on continuous columns, standardization/encoding, training on 5 folds 80/10/10
+raw data, nan processing, feature selection on continuous columns, normalization/encoding, training on 5 folds 80/10/10
+
+raw data, nan processing, normalization/encoding, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, standardization/encoding, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, normalization/encoding, feature selection on continuous columns, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, standardization/encoding, feature selection on continuous columns, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, normalization/encoding, feature selection on all columns, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, standardization/encoding, feature selection on all columns, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, feature selection on continuous columns, standardization/encoding, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, feature selection on continuous columns, normalization/encoding, training on 5 folds 80/10/10
+
+############################
+
+raw data, nan processing, unskew, normalization/encoding, training on 80/10/10
+raw data, nan processing, unskew, standardization/encoding, training on 80/10/10
+raw data, nan processing, unskew, normalization/encoding, feature selection on continuous columns, training on 80/10/10
+raw data, nan processing, unskew, standardization/encoding, feature selection on continuous columns, training on 80/10/10
+raw data, nan processing, unskew, normalization/encoding, feature selection on all columns, training on 80/10/10
+raw data, nan processing, unskew, standardization/encoding, feature selection on all columns, training on 80/10/10
+raw data, nan processing, unskew, feature selection on continuous columns, standardization/encoding, training on 80/10/10
+raw data, nan processing, unskew, feature selection on continuous columns, normalization/encoding, training on 80/10/10
+
+raw data, nan processing, unskew, normalization/encoding, training on 5 folds 80/10/10
+raw data, nan processing, unskew, standardization/encoding, training on 5 folds 80/10/10
+raw data, nan processing, unskew, normalization/encoding, feature selection on continuous columns, training on 5 folds 80/10/10
+raw data, nan processing, unskew, standardization/encoding, feature selection on continuous columns, training on 5 folds 80/10/10
+raw data, nan processing, unskew, normalization/encoding, feature selection on all columns, training on 5 folds 80/10/10
+raw data, nan processing, unskew, standardization/encoding, feature selection on all columns, training on 5 folds 80/10/10
+raw data, nan processing, unskew, feature selection on continuous columns, standardization/encoding, training on 5 folds 80/10/10
+raw data, nan processing, unskew, feature selection on continuous columns, normalization/encoding, training on 5 folds 80/10/10
+
+raw data, nan processing, unskew, normalization/encoding, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, unskew, standardization/encoding, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, unskew, normalization/encoding, feature selection on continuous columns, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, unskew, standardization/encoding, feature selection on continuous columns, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, unskew, normalization/encoding, feature selection on all columns, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, unskew, standardization/encoding, feature selection on all columns, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, unskew, feature selection on continuous columns, standardization/encoding, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
+raw data, nan processing, unskew, feature selection on continuous columns, normalization/encoding, training on 5 folds 80/10/10 & hyperparameters bayesian optimization for each fold
